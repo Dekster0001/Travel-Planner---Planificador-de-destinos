@@ -1,0 +1,135 @@
+/* estilos.css — Tema claro, mobile-first. Grid + Flexbox, sin frameworks. */
+
+:root {
+  --fondo: #f8fafc;
+  --superficie: #ffffff;
+  --borde: #e2e8f0;
+  --texto: #0f172a;
+  --tenue: #64748b;
+  --primario: #2563eb;
+  --exito: #10b981;
+  --peligro: #ef4444;
+  --radio: 12px;
+  --sombra: 0 1px 2px rgba(15, 23, 42, .06), 0 8px 24px rgba(15, 23, 42, .06);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0 1rem 3rem;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.55;
+}
+
+.cabecera { text-align: center; padding: 2.5rem 0 1.5rem; }
+.cabecera h1 { margin: 0; font-size: clamp(1.75rem, 5vw, 2.5rem); letter-spacing: -.02em; }
+.cabecera p { margin: .25rem 0 0; color: var(--tenue); }
+
+/* Grid de una columna en móvil; dos columnas a partir de 900px. */
+.contenedor {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 1080px;
+  margin: 0 auto;
+  grid-template-columns: 1fr;
+}
+
+.panel {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 1.25rem;
+}
+
+.panel h2 { display: flex; align-items: center; gap: .6rem; margin: 0 0 1rem; font-size: 1.1rem; }
+.paso {
+  display: grid; place-items: center;
+  width: 1.75rem; height: 1.75rem;
+  background: #eff6ff; color: var(--primario);
+  border-radius: 50%; font-size: .9rem;
+}
+
+label { display: block; font-size: .85rem; color: var(--tenue); margin-bottom: .25rem; }
+
+input {
+  width: 100%; padding: .6rem .75rem;
+  border: 1px solid var(--borde); border-radius: 8px;
+  font: inherit; color: inherit; background: var(--fondo);
+}
+input:focus-visible { outline: 2px solid var(--primario); outline-offset: 1px; }
+
+/* Flexbox para alinear campos y botones en una sola fila. */
+.fila { display: flex; flex-wrap: wrap; gap: .75rem; align-items: flex-end; }
+.fila .campo { flex: 1 1 8rem; }
+form { margin: 0; }
+
+.btn {
+  padding: .6rem 1.1rem;
+  border: 0; border-radius: 8px;
+  background: var(--primario); color: #fff;
+  font: inherit; font-weight: 600; cursor: pointer;
+  transition: filter .15s ease;
+}
+.btn:hover:not(:disabled) { filter: brightness(1.08); }
+.btn:focus-visible { outline: 2px solid var(--primario); outline-offset: 2px; }
+.btn:disabled { background: var(--borde); color: var(--tenue); cursor: not-allowed; }
+.btn--peligro { background: var(--peligro); }
+
+/* Los 4 estados de la interfaz */
+.estado { margin: 0; padding: 1.75rem 1rem; text-align: center; color: var(--tenue); }
+.alerta { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: 8px; padding: 1rem; }
+.alerta p { margin: .35rem 0 0; }
+.aviso { min-height: 1.25rem; margin: .75rem 0 0; color: #047857; font-size: .9rem; }
+
+.spinner {
+  display: inline-block; width: 1rem; height: 1rem; vertical-align: -.15rem;
+  border: 2px solid var(--borde); border-top-color: var(--primario);
+  border-radius: 50%; animation: girar .7s linear infinite;
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+
+.pais { display: flex; align-items: center; gap: 1rem; }
+.pais img { border: 1px solid var(--borde); border-radius: 6px; background: var(--fondo); }
+.pais h3 { margin: 0; font-size: 1.35rem; }
+.oficial { margin: .15rem 0 0; color: var(--tenue); font-size: .9rem; }
+
+.datos, .resumen {
+  display: grid; gap: .75rem; margin: 1.25rem 0 0;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+}
+.dato { background: var(--fondo); border: 1px solid var(--borde); border-radius: 8px; padding: .6rem .75rem; }
+.dato dt { font-size: .75rem; color: var(--tenue); text-transform: uppercase; letter-spacing: .04em; }
+.dato dd { margin: .15rem 0 0; font-weight: 600; }
+
+.vecinos { margin-top: 1.25rem; }
+.vecinos h3 { margin: 0 0 .5rem; font-size: .9rem; color: var(--tenue); }
+.vecinos { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.chip {
+  padding: .35rem .8rem; border: 1px solid var(--borde); border-radius: 999px;
+  background: var(--superficie); font: inherit; font-size: .85rem; cursor: pointer;
+}
+.chip:hover { border-color: var(--primario); color: var(--primario); }
+
+/* Cada destino del plan es una fila flexible. */
+.plan { list-style: none; margin: 1rem 0; padding: 0; display: grid; gap: .75rem; }
+.item {
+  display: flex; flex-wrap: wrap; align-items: flex-end; gap: .75rem;
+  padding: .75rem; border: 1px solid var(--borde); border-radius: 8px;
+}
+.item .miniatura { width: 40px; height: 27px; border: 1px solid var(--borde); border-radius: 4px; }
+.item .nombre { flex: 1 1 8rem; align-self: center; }
+.item .campo { flex: 0 1 7rem; }
+.item .subtotal { margin-left: auto; align-self: center; color: #047857; }
+.item .entrada { padding: .4rem .5rem; }
+
+@media (max-width: 768px) {
+  .item .subtotal { margin-left: 0; flex: 1 1 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

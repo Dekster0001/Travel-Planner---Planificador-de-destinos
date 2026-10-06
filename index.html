@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!-- ===========================================================================
+     index.html — ESTRUCTURA DE LA INTERFAZ
+     Solo contiene contenedores y textos. Ni un solo script en línea y ni una
+     sola regla de estilo: el JS va en ./js/ y el CSS en ./css/estilos.css.
+     Al ser scripts clásicos con `defer`, el orden importa y NO pueden ser módulos
+     ES: `type="module"` exige servidor y rompería el "doble clic en index.html".
+     =========================================================================== -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Planner — Planificador académico de destinos</title>
+  <link rel="stylesheet" href="./css/estilos.css">
+</head>
+<body>
+  <header class="cabecera">
+    <h1>Travel Planner</h1>
+    <p>Planificador académico de destinos</p>
+  </header>
+
+  <main class="contenedor">
+
+    <!-- === BLOQUE 1 · BUSCADOR =============================================
+         Formulario del paso 1. El submit lo intercepta app.js con
+         preventDefault() para consultar la API sin recargar la página. -->
+    <section class="panel">
+      <h2><span class="paso">1</span> Buscar un país</h2>
+      <form id="busqueda">
+        <label for="entrada">Nombre del país</label>
+        <div class="fila">
+          <input id="entrada" type="search" placeholder="Colombia, Japón, España, Francia…" required>
+          <button class="btn" type="submit">Buscar</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- === BLOQUE 2 · FICHA DEL DESTINO ====================================
+         Los 4 ESTADOS DE LA INTERFAZ. Los cuatro existen siempre en el DOM y se
+         alternan con el atributo `hidden`; mostrar(estado) en app.js deja visible
+         solo uno. Por eso los 4 están comentados y numerados por estado. -->
+    <section class="panel">
+      <h2><span class="paso">2</span> Ficha del destino</h2>
+
+      <!-- Estado 1 de 4: inicial. Es el único sin `hidden`. -->
+      <p id="vacio" class="estado">Escribe el nombre de un país para empezar.</p>
+
+      <!-- Estado 2 de 4: cargando. La búsqueda está en vuelo. -->
+      <p id="cargando" class="estado" hidden>
+        <span class="spinner" aria-hidden="true"></span> Consultando la API…
+      </p>
+
+      <!-- Estado 4 de 4: error.
+           role="alert" hace que un lector de pantalla anuncie el mensaje apenas
+           aparece. #errorTxt se llena con textContent desde el catch de app.js. -->
+      <div id="error" class="alerta" role="alert" hidden>
+        <strong>No pudimos completar la búsqueda.</strong>
+        <p id="errorTxt"></p>
+      </div>
+
+      <!-- Estado 3 de 4: éxito.
+           #titulo, #oficial, #datos y #vecinos se rellenan con textContent: por
+           eso un país con <img onerror=...> se muestra literal y no se ejecuta. -->
+      <div id="exito" hidden>
+        <article class="pais">
+          <!-- alt vacío: es decorativa, el nombre del país está justo al lado. -->
+          <img id="bandera" width="84" height="56" alt="">
+          <div>
+            <h3 id="titulo"></h3>
+            <p id="oficial" class="oficial"></p>
+          </div>
+        </article>
+        <!-- <dl> con los 5 datos: capital, región, subregión, población, moneda. -->
+        <dl id="datos" class="datos"></dl>
+        <!-- Botones de países limítrofes, creados por renderizarVecinos(). -->
+        <div id="vecinos" class="vecinos"></div>
+      </div>
+    </section>
+
+    <!-- === BLOQUE 3 · ALTA AL PLAN =========================================
+         El submit de #alta es interceptado igual que el buscador. Las validaciones
+         (días > 0, costo > 0, no duplicados) viven en presupuesto.js, no aquí. -->
+    <section class="panel">
+      <h2><span class="paso">3</span> Armar el plan</h2>
+      <form id="alta">
+        <div class="fila">
+          <div class="campo">
+            <label for="dias">Días</label>
+            <input id="dias" type="number" min="1" step="1" value="7" required>
+          </div>
+          <div class="campo">
+            <label for="costo">Costo diario</label>
+            <input id="costo" type="number" min="0.01" step="any" value="120000" required>
+          </div>
+          <button class="btn" type="submit">Agregar al plan</button>
+        </div>
+      </form>
+      <!-- role="status": anuncio no interruptivo, ideal para "Perú agregado". -->
+      <p id="aviso" class="aviso" role="status"></p>
+
+      <!-- Mensaje de plan vacío (oculto cuando hay destinos) y la lista. -->
+      <p id="planVacio" class="estado">Tu plan todavía no tiene destinos.</p>
+      <!-- Una <li class="item"> por destino, creada por tarjeta() en app.js. -->
+      <ul id="plan" class="plan"></ul>
+      <button id="vaciar" class="btn btn--peligro" type="button" disabled>Vaciar plan</button>
+    </section>
+
+    <!-- === BLOQUE 4 · RESUMEN DEL PRESUPUESTO ==============================
+         Los 4 totales los calcula calcularTotales() con un reduce, sobre los datos
+         que PlanPresupuesto.obtenerDestinos() devuelve como copia defensiva. -->
+    <section class="panel">
+      <h2><span class="paso">4</span> Resumen del presupuesto</h2>
+      <dl id="resumen" class="resumen"></dl>
+    </section>
+  </main>
+
+  <noscript>
+    <p class="alerta">Esta aplicación necesita JavaScript para funcionar.</p>
+  </noscript>
+
+  <!-- === CARGA DE SCRIPTS ==================================================
+       El orden es obligatorio porque cada archivo depende del anterior:
+         api.js         expone window.ApiPaises
+         presupuesto.js expone window.PlanPresupuesto
+         app.js         conecta ambos con el DOM
+       Con `defer` el navegador los baja en paralelo y los ejecuta en orden,
+       justo después de analizar el HTML. Por eso app.js puede escuchar
+       DOMContentLoaded. -->
+  <script src="./js/api.js" defer></script>
+  <script src="./js/presupuesto.js" defer></script>
+  <script src="./js/app.js" defer></script>
+</body>
+</html>
