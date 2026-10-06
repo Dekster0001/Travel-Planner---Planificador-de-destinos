@@ -23,7 +23,7 @@
   `https://github.com/Dekster0001/Travel-Planner---Planificador-de-destinos.git`
 
 * **Despliegue en Vivo (GitHub Pages):**  
-  `https://dekster0001.github.io/Encuesta-Interactivo/`
+  `https://dekster0001.github.io/Travel-Planner---Planificador-de-destinos/`
 
 ---
 
